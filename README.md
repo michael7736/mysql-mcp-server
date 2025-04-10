@@ -1,5 +1,7 @@
 # MySQL MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@michael7736/mysql-mcp-server)](https://smithery.ai/server/@michael7736/mysql-mcp-server)
+
 This is a Model Context Protocol (MCP) server that provides access to a MySQL database. It allows agent to execute SQL queries against a MySQL database.
 
 ## Features
@@ -22,6 +24,15 @@ This is a Model Context Protocol (MCP) server that provides access to a MySQL da
 
 ## Installation
 
+### Installing via Smithery
+
+To install mysql-mcp-server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@michael7736/mysql-mcp-server):
+
+```bash
+npx -y @smithery/cli install @michael7736/mysql-mcp-server --client claude
+```
+
+### Manual Installation
 1. Clone or download this repository
 2. Install dependencies:
 
