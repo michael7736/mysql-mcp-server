@@ -1,0 +1,20 @@
+{
+  "name": "mysql-mcp-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "npx tsc && chmod +x build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@types/node": "^22.13.16",
+    "mysql2": "^3.14.0",
+    "typescript": "^5.8.2"
+  }
+}
