@@ -127,6 +127,20 @@ class MySqlServer {
                         required: ['query'],
                     },
                 },
+                {
+                    name: 'execute_sql',
+                    description: 'Executes any non-SELECT SQL statement (e.g., ALTER TABLE, DROP, etc.)',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            query: {
+                                type: 'string',
+                                description: 'The SQL statement to execute.',
+                            },
+                        },
+                        required: ['query'],
+                    },
+                },
             ],
         }));
         this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -144,6 +158,8 @@ class MySqlServer {
                     return this.handleUpdateData(request, transactionId);
                 case 'delete_data':
                     return this.handleDeleteData(request, transactionId);
+                case 'execute_sql':
+                    return this.handleExecuteSql(request, transactionId);
                 default:
                     throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${request.params.name}`);
             }
@@ -359,6 +375,48 @@ class MySqlServer {
         const transport = new StdioServerTransport();
         await this.server.connect(transport);
         console.error('MySQL MCP server running on stdio');
+    }
+    // Handle general SQL execution (non-SELECT)
+    async handleExecuteSql(request, transactionId) {
+        if (!isValidSqlQueryArgs(request.params.arguments)) {
+            throw new McpError(ErrorCode.InvalidParams, 'Invalid SQL query arguments.');
+        }
+        const query = request.params.arguments.query;
+        if (isReadOnlyQuery(query)) {
+            throw new McpError(ErrorCode.InvalidParams, 'SELECT queries are not allowed with execute_sql tool.');
+        }
+        console.error(`[${transactionId}] Executing general SQL: ${query}`);
+        try {
+            const [result] = await this.pool.query(query);
+            console.error(`[${transactionId}] SQL executed successfully`);
+            return {
+                content: [
+                    {
+                        type: 'text',
+                        text: JSON.stringify({
+                            success: true,
+                            message: 'SQL executed successfully',
+                            result
+                        }, null, 2),
+                    },
+                ],
+            };
+        }
+        catch (error) {
+            console.error(`[${transactionId}] SQL error:`, error);
+            if (error instanceof Error) {
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: `MySQL error: ${error.message}`,
+                        },
+                    ],
+                    isError: true,
+                };
+            }
+            throw error;
+        }
     }
 }
 const server = new MySqlServer();
