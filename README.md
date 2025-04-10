@@ -1,6 +1,6 @@
 # MySQL MCP Server
 
-This is a Model Context Protocol (MCP) server that provides access to a MySQL database. It allows Claude to execute SQL queries against a MySQL database.
+This is a Model Context Protocol (MCP) server that provides access to a MySQL database. It allows agent to execute SQL queries against a MySQL database.
 
 ## Features
 
@@ -86,6 +86,8 @@ Add the MySQL MCP server to your MCP settings file:
 ### VSCode (Claude Extension)
 
 File: `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+
+Change the args according your MySQL configuruation
 
 ```json
 {
